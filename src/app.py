@@ -9,9 +9,7 @@ st.set_page_config(page_title="Marketing Mix Model", layout="wide")
 
 st.title("Marketing Mix Modeling Dashboard")
 
-# =========================
-# Load Data
-# =========================
+#Data loading
 @st.cache_data
 def load_df():
     df = pd.read_csv("../data/processed/ml_df.csv")
@@ -20,15 +18,11 @@ def load_df():
 
 df = load_df()
 
-# =========================
-# Load Model + Features
-# =========================
+
 rf_model = joblib.load("../models/MMM Random forest model.pkl")
 feature_names = joblib.load("../models/feature_names.pkl")
 
-# =========================
-# KPIs
-# =========================
+#Business metrics section
 st.subheader("Key Business Metrics")
 
 col1, col2, col3 = st.columns(3)
@@ -37,9 +31,7 @@ col1.metric("Total Sales", f"{df['sales'].sum():,.0f}")
 col2.metric("Avg Weekly Sales", f"{df['sales'].mean():,.0f}")
 col3.metric("Max Weekly Sales", f"{df['sales'].max():,.0f}")
 
-# =========================
-# Actual Sales Over Time
-# =========================
+
 st.subheader("Actual Sales Over Time")
 
 chart = alt.Chart(df).mark_line().encode(
@@ -48,11 +40,8 @@ chart = alt.Chart(df).mark_line().encode(
     tooltip=["calendar_week", "sales"]
 ).interactive()
 
-st.altair_chart(chart, use_container_width=True)
+st.altair_chart(chart,width = 'stretch')
 
-# =========================
-# Historical Validation
-# =========================
 st.subheader("Historical Prediction vs Actual")
 
 selected_week = st.selectbox(
@@ -71,9 +60,6 @@ if not week_row.empty:
     colA.metric("Actual Sales", f"{actual:,.0f}")
     colB.metric("Model Prediction", f"{predicted:,.0f}")
 
-# =========================
-# WHAT-IF SIMULATION
-# =========================
 st.subheader("Media What-If Simulator")
 
 base_row = df.iloc[-1].copy()
@@ -93,7 +79,7 @@ for feature in adstock_features:
         value=default_val
     )
 
-# Keep controls fixed
+
 for col in feature_names:
     if col not in input_data:
         input_data[col] = base_row[col]
@@ -104,9 +90,7 @@ sim_prediction = rf_model.predict(input_df)[0]
 
 st.metric("Simulated Predicted Sales", f"{sim_prediction:,.0f}")
 
-# =========================
-# CHANNEL CONTRIBUTION (Permutation Importance Proxy)
-# =========================
+#Channel contribution
 st.subheader("Channel Contribution Estimate")
 
 importances = rf_model.feature_importances_
@@ -124,11 +108,30 @@ bar_chart = alt.Chart(channel_importance).mark_bar().encode(
     y=alt.Y("feature", sort="-x")
 )
 
-st.altair_chart(bar_chart, use_container_width=True)
+st.altair_chart(bar_chart, width = 'stretch')
 
-# =========================
-# SHAP EXPLANATION
-# =========================
+st.subheader("Simulated Marketing Mix Share")
+
+
+sim_shares = []
+for feature in channel_importance['feature']:
+    current_val = input_df[feature].values[0]
+    base_imp = channel_importance.loc[channel_importance['feature'] == feature, 'importance'].values[0]
+    
+    impact = abs(current_val * base_imp)
+    sim_shares.append({"Channel": feature.replace("_adstock", "").title(), "Impact": impact})
+
+sim_share_df = pd.DataFrame(sim_shares)
+
+dynamic_pie = alt.Chart(sim_share_df).mark_arc(innerRadius=50).encode(
+    theta=alt.Theta(field="Impact", type="quantitative"),
+    color=alt.Color(field="Channel", type="nominal"),
+    tooltip=["Channel", "Impact"]
+).properties(height=400)
+
+st.altair_chart(dynamic_pie, width = 'stretch')
+
+#SHAP explanation
 st.subheader("Model Explanation (SHAP)")
 
 explainer = shap.TreeExplainer(rf_model)
@@ -144,4 +147,4 @@ shap_chart = alt.Chart(shap_df.head(15)).mark_bar().encode(
     y=alt.Y("feature", sort="-x")
 )
 
-st.altair_chart(shap_chart, use_container_width=True)
+st.altair_chart(shap_chart, width = 'stretch')
