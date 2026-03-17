@@ -1,13 +1,13 @@
 # Marketing Mix Modeling (MMM) Dashboard
 
 ## Project Overview
-This project is a decision-support tool designed to quantify the incremental impact of multi-channel marketing spend on weekly sales. By analyzing approximately 120 weeks of pulsed media activity, this project identifies the "memory" (Adstock) and effectiveness of various channels to optimize future budget allocation.
+This project is a decision-support tool designed to quantify the incremental impact of multi-channel marketing spend on weekly sales. By analyzing approximately 120 weeks of pulsed media activity, this project identifies the memory (Adstock) and effectiveness of various channels to optimize future budget allocation.
 
 ## Project Goals
 * **Attribution**: Accurately rank marketing channels (Google, Facebook, Affiliates, etc.) based on their contribution to revenue.
 * **Simulation**: Provide an interactive "What-If" environment for stakeholders to test spend scenarios.
 * **Transparency**: Use SHAP (SHapley Additive exPlanations) to demystify model predictions.
-* **Optimization**: Identify long-term "Anchor" channels vs. short-term "Tactical" triggers.
+* **Optimization**: Identify long-term anchor channels vs. short-term tactical triggers.
 
 ## 🛠️ Methodology
 * **Algorithm**: Random Forest Regressor (Champion Model $R^2 = 0.78$).
