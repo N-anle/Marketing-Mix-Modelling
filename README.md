@@ -9,7 +9,7 @@ This project is a decision-support tool designed to quantify the incremental imp
 * **Transparency**: Use SHAP (SHapley Additive exPlanations) to demystify model predictions.
 * **Optimization**: Identify long-term anchor channels vs. short-term tactical triggers.
 
-## 🛠️ Methodology
+## Methodology
 * **Algorithm**: Random Forest Regressor (Champion Model $R^2 = 0.78$).
 * **Feature Engineering**: 
     * **Adstock Transformation**: Capturing lagged effects using a decay formula $A_t = T_t + \lambda A_{t-1}$.
