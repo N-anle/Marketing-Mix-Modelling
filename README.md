@@ -38,6 +38,7 @@ MARKETING MIX MODELLING/
 ├── .gitignore              # Files to ignore in Git (venv, .pyc, etc.)
 ├── README.md               # Project documentation
 └── requirements.txt        # List of Python dependencies
+```
 
 
 ## Usage Instructions
