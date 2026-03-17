@@ -21,10 +21,10 @@ This project is a decision-support tool designed to quantify the incremental imp
 
 ```text
 MARKETING MIX MODELLING/
-├── data/
+├── data/                   # GitIgnored
 │   ├── Processed/          # Cleaned, engineered, and adstocked data
 │   └── Raw/                # Original weekly marketing records
-├── models/
+├── models/                 #Git Ignored
 │   ├── feature_names.pkl   # List of features used during training
 │   ├── MMM Random forest model.pkl  # Trained 0.78 R2 model
 │   └── scaler.pkl          # Saved Z-score scaling parameters
